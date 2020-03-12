@@ -1,5 +1,5 @@
 <template>
-  <div>{{str | myTime | formatDateTime }}111</div>
+  <div>{{str | myTime | formatDateTime }}123456</div>
 </template> 
 
 <script>
