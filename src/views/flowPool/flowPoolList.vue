@@ -28,7 +28,7 @@
       <el-table-column align="center" width="200" label="过期日期" prop="stopDate">
         <template slot-scope="scope">
           <span v-if="scope.row.stopDate==null"></span>
-          <span v-else="scope.row.stopDate!=null">{{scope.row.stopDate | myTime | formatDateTime}}</span>
+          <span v-else-if="scope.row.stopDate!=null">{{scope.row.stopDate | myTime | formatDateTime}}</span>
         </template>
       </el-table-column>
       <el-table-column align="center" width="150" label="期限（月）" prop="limitDate"></el-table-column>
@@ -59,16 +59,16 @@
         </template>
       </el-table-column>
 
-      <el-table-column min-width="300" align="right" fixed="right">
+      <el-table-column min-width="200" align="right" fixed="right">
         <template slot="header" slot-scope="scope">
           <el-input v-model.trim="keySearch" size="mini" placeholder="输入流量池名称进行搜索" />
         </template>
-        <template slot-scope="scope">
+        <!-- <template slot-scope="scope">
           <el-button size="mini" @click="start(scope.row.id)">启用</el-button>
           <el-button size="mini" type="danger" @click="stop(scope.row.id)">停用</el-button>
           <el-button size="mini" type="warning" @click="move(scope.row.id)">迁移</el-button>
           <el-button size="mini" type="success" @click="modify(scope.row)">修改</el-button>
-        </template>
+        </template> -->
       </el-table-column>
     </el-table>
 
