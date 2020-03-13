@@ -1,7 +1,7 @@
 <template>
   <div class="wrap clearfix">
     <el-divider content-position="center">
-      <h2>流量池列表{{windowHeight}} {{tableHeight}}</h2>
+      <h2>流量池列表</h2>
     </el-divider>
     <el-table
       :height="tableHeight"
