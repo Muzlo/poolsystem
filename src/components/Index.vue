@@ -164,8 +164,8 @@ export default {
         }
     },
     created() {
-        let userLoginInfo=JSON.parse(localStorage.getItem("userLoginInfo"));
-        this.userName=JSON.parse(localStorage.getItem("userName"));
+        // let userLoginInfo=JSON.parse(localStorage.getItem("userLoginInfo"));
+        // this.userName=JSON.parse(localStorage.getItem("userName"));
         
     },
     mounted() {

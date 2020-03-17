@@ -1,5 +1,6 @@
 import axios from 'axios'
-import { Loading } from 'element-ui';
+import { Loading,MessageBox } from 'element-ui';
+import router from '../../router'
 
 var instance = axios.create({ 
     timeout: 1000 * 12
@@ -10,10 +11,12 @@ let loadingInstance;
         instance.interceptors.request.use(config => {
             // 在发送请求之前做些什么
             loadingInstance=Loading.service({ fullscreen: true,text:"数据加载中" });
-            console.log(config)
+            //console.log(config)
             //根据config.url判断路径 是否需要加请求头
-            // config.headers.common['token'] = localStorage.getItem('token');//可新增
-            // config.headers.post['Content-Type2'] = 'application/x-www-form-urlencodedsssssssss';//可修改
+            // if(config.url!="登录请求url"){
+            //    config.headers.token=localStorage.getItem('token');
+            // }
+            config.headers.token='49212F44-1148-4ABF-B36D-DE5363FA34B2';
             return config
         }, error => {
             // 对请求错误做些什么
@@ -25,7 +28,19 @@ let loadingInstance;
         // 添加响应拦截器
         instance.interceptors.response.use(response => {
             loadingInstance.close();
-            const res = response.data
+            const res = response.data;
+            if(res.status==-1){
+                //跳转到登录页
+                MessageBox.alert('登录信息超时，请重新登录！', '登录超时', {
+                    confirmButtonText: '确定',
+                    callback: action => {
+                       localStorage.removeItem('token');
+                        router.replace({
+                            path: '/login',
+                        })
+                    }
+                });
+            }
             return res
         }, error => {
             // 对响应错误做点什么

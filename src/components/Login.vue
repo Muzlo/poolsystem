@@ -58,7 +58,7 @@ export default {
             if(this.form.checked){
               localStorage.setItem('userLoginInfo',userLoginInfo);
             }
-            localStorage.setItem('token', 'i_am_token');//token 存储 下次登录判断token是否正确 则直接跳到index页
+            localStorage.setItem('token', '49212F44-1148-4ABF-B36D-DE5363FA34B2');//token 存储 下次登录判断token是否正确 则直接跳到index页
             this.$router.push({ path: this.redirect || '/' }, onComplete => { }, onAbort => { })
           } else {
             return false;

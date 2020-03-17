@@ -54,19 +54,25 @@ export const asyncRoutes = {
         meta: { title: '流量池网卡导入' },
         component: () => import('../views/flowPool/flowPoolCardImport.vue'),
     },
-    flowCard: {
-        path: 'flowCard',
-        name: 'flowCard',
+    flowCardList: {
+        path: 'flowCardList',
+        name: 'flowCardList',
         meta: { title: '流量池网卡列表' },
-        component: () => import('../views/flowPool/flowCard.vue'),
+        component: () => import('../views/flowPool/flowCardList.vue'),
     },
-
-
-
-
-
-
-
+    ///////////基础信息
+    apiUserList:{
+        path: 'apiUserList',
+        name: 'apiUserList',
+        meta: { title: '接口用户列表' },
+        component: () => import('../views/baseInfo/apiUserList.vue'),
+    },
+    simIspList:{
+        path: 'simIspList',
+        name: 'simIspList',
+        meta: { title: 'ISP列表' },
+        component: () => import('../views/baseInfo/simIspList.vue'),
+    }
 
 
 }

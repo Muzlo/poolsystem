@@ -152,8 +152,8 @@ export default {
       tableData:[],
       keySearch: "", //关键字搜索
       currentPage: 1, //当前选中页
-      pageSize: 5, //默认每页显示条数
-      pageSizes: [5, 8, 10], //更改每页显示数据条数
+      pageSize: 30, //默认每页显示条数
+      pageSizes: [30, 50, 100], //更改每页显示数据条数
       dialogVisible: false, //弹窗显示隐藏
       windowHeight:"",//窗口高度
       ///流量池修改
