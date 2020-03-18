@@ -30,7 +30,8 @@ export default {
     formTitle:{},
     formRules:{},
     form:{},
-    otherInfo:{}
+    otherInfo:{},
+    url:{}
   },
   data(){
     return {
@@ -68,11 +69,11 @@ export default {
       //表单提交
       formSubmit() {
           if(this.otherInfo=="1"){ //修改
-              this.publicHandle(`${baseURL.ip1}/baseinfo/updSimIsp`);
+              this.publicHandle(this.url.updUrl);
           }else if(this.otherInfo=="0"){ //新增
-              this.publicHandle(`${baseURL.ip1}/baseinfo/addSimIsp`);
+              this.publicHandle(this.url.addUrl);
           }
-          this.$parent.simIspListFn();
+          this.$parent.getTableListFn();
       },
       //新增 更新 删除 公共函数
       async publicHandle(url){
@@ -80,8 +81,8 @@ export default {
               const data = await this.$axios.post(url,
               this._qs.stringify(this.form)
               );
-              this.$message.success("success");
-              
+              //this.$message.success(data.message);
+              this.$message.success("操作成功");
           } catch (err) {
               console.log(err);
               this.$message.error("服务器异常，请稍后再试！");

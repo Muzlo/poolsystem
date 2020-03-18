@@ -8,18 +8,20 @@
     </el-row>
 
     <el-divider content-position="center">
-      <h2>运营商列表</h2>
+      <h2>SIM列表</h2>
     </el-divider>
 
     <publicTable :tableHeight="tableHeight" :tableList="tableList.slice((currentPage-1)*pageSize,currentPage*pageSize)">
 
         <template slot="tableContent">
             <el-table-column align="center" label="#" type="index"></el-table-column>
-            <el-table-column align="center" label="运营商名称" prop="ispName"></el-table-column>
-            <el-table-column align="center" label="运营商代码" prop="ispCode"></el-table-column>      
+            <el-table-column align="center" label="卡类型代码" prop="classCode"></el-table-column>
+            <el-table-column align="center" label="卡类型名称" prop="className"></el-table-column>  
+            <el-table-column align="center" label="API代码" prop="apiCode"></el-table-column>
+            <el-table-column align="center" label="备注" prop="classNote"></el-table-column>      
             <el-table-column align="right" fixed="right">
                 <template slot="header" slot-scope="scope">
-                    <el-input v-model.trim="keySearch" size="mini" placeholder="输入用户名称进行搜索" />
+                    <el-input v-model.trim="keySearch" size="mini" placeholder="输入卡类型代码进行搜索" />
                 </template>
                 <template slot-scope="scope">
                     <el-button size="mini" type="warning" @click="modify(scope.row)">修改</el-button>
@@ -48,11 +50,17 @@
     <publicForm :formTitle="formTitle" :formRules="formRules" :form="form" :otherInfo="otherInfo" :url="url">
 
         <template slot="formContent">
-            <el-form-item label="运营商名称" prop="ispName">
-                <el-input v-model="form.ispName"></el-input>
+            <el-form-item label="API代码" prop="apiCode">
+                <el-input v-model="form.apiCode"></el-input>
             </el-form-item>
-            <el-form-item label="运营商代码" prop="ispCode">
-                <el-input v-model="form.ispCode"></el-input>
+            <el-form-item label="卡类型代码" prop="classCode">
+                <el-input v-model="form.classCode"></el-input>
+            </el-form-item>
+            <el-form-item label="卡类型名称" prop="className">
+                <el-input v-model="form.className"></el-input>
+            </el-form-item>
+            <el-form-item label="卡类型备注" prop="classNote">
+                <el-input v-model="form.classNote"></el-input>
             </el-form-item>
         </template>
 
@@ -68,7 +76,7 @@ import publicTable from "../../components/baseInfo/publicTable.vue";
 import publicForm from "../../components/baseInfo/publicForm.vue";
 import { baseURL } from "../../common/js/ipConfig.js";
 export default {
-    name:"simIspList",
+    name:"simClassList",
     data(){
         return {
             tableData:[],
@@ -81,22 +89,27 @@ export default {
             formTitle:"标题",
             ///表单
             form: {
-                ispCode:"",
-                ispName:""
+                apiCode:"",
+                classCode:"",
+                className:"",
+                classNote:""
             },
             //验证表单
             formRules: {
-                ispCode: [
+                apiCode: [
                     { required: true, message: "不能为空", trigger: "blur" }
                 ],
-                ispName: [
+                classCode: [
+                    { required: true, message: "不能为空", trigger: "blur" }
+                ],
+                className: [
                     { required: true, message: "不能为空", trigger: "blur" }
                 ],
             },
             //修改 新增接口地址
             url:{
-                "updUrl":`${baseURL.ip1}/baseinfo/updSimIsp`,
-                "addUrl":`${baseURL.ip1}/baseinfo/addSimIsp`,
+                "updUrl":`${baseURL.ip1}/baseinfo/updSimClass`,
+                "addUrl":`${baseURL.ip1}/baseinfo/addSimClass`,
             }
 
         }
@@ -117,7 +130,7 @@ export default {
         //复制一份表格数据
         tableList() {
             return this.tableData.filter(item => {
-                if (item.ispCode.includes(this.keySearch)) {
+                if (item.classCode.includes(this.keySearch)) {
                     return item;
                 }
                 this.currentPage = 1;
@@ -128,7 +141,7 @@ export default {
         //
         openDialog(){
             this.$store.commit('dialogVisibleBaseInfo/dialogVisibleMutations',true);
-            this.formTitle='新增运营商';
+            this.formTitle='新增卡类型';
             this.otherInfo='0';
             this.form={};
         },
@@ -145,7 +158,7 @@ export default {
         async getTableListFn() {
             try {
                 const data = await this.$axios.get(
-                `${baseURL.ip1}/baseinfo/simIspList`
+                `${baseURL.ip1}/baseinfo/simClassList`
                 );
                 if (data.success) {
                     this.tableData=data.data
@@ -160,25 +173,29 @@ export default {
         modify(data){
             this.$store.commit('dialogVisibleBaseInfo/dialogVisibleMutations',true)
             this.otherInfo='1';
-            this.formTitle="修改运营商"
-            this.form.ispName=data.ispName;
-            this.form.ispCode=data.ispCode;
+            this.formTitle="修改卡类型"
+            this.form.apiCode=data.apiCode;
+            this.form.classCode=data.classCode;
+            this.form.className=data.className;
+            this.form.classNote=data.classNote;
             this.form.id=data.id;
         },
         //删除运营商
         del(data){
             this.otherInfo='2';
-            this.form.ispName=data.ispName;
-            this.form.ispCode=data.ispCode;
+            this.form.apiCode=data.apiCode;
+            this.form.classCode=data.classCode;
+            this.form.className=data.className;
+            this.form.classNote=data.classNote;
             this.form.id=data.id;
-            this.$confirm('此操作将删除该运营商, 是否继续?', '提示', {
+            this.$confirm('此操作将删除该卡类型, 是否继续?', '提示', {
             confirmButtonText: '确定',
             cancelButtonText: '取消',
             type: 'warning',
             center: true
             }).then(async() => {
                 try {
-                    const data = await this.$axios.post(`${baseURL.ip1}/baseinfo/delSimIsp`,
+                    const data = await this.$axios.post(`${baseURL.ip1}/baseinfo/delSimClass`,
                     this._qs.stringify(this.form)
                     );
                     this.$message.success("success");

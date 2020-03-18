@@ -72,7 +72,13 @@ export const asyncRoutes = {
         name: 'simIspList',
         meta: { title: 'ISP列表' },
         component: () => import('../views/baseInfo/simIspList.vue'),
-    }
+    },
+    simClassList:{
+        path: 'simClassList',
+        name: 'simClassList',
+        meta: { title: 'SIM列表' },
+        component: () => import('../views/baseInfo/simClassList.vue'),
+    },
 
 
 }

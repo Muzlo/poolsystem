@@ -61,6 +61,10 @@ router.beforeEach(async (to, from, next) => {
                                     name: 'simIspList',
                                     text: 'ISP列表',
                                 },
+                                {
+                                    name: 'simClassList',
+                                    text: 'SIM列表',
+                                },
                             ]
                         },   
                     ];
