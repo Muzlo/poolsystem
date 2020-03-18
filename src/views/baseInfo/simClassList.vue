@@ -20,10 +20,10 @@
             <el-table-column align="center" label="API代码" prop="apiCode"></el-table-column>
             <el-table-column align="center" label="备注" prop="classNote"></el-table-column>      
             <el-table-column align="right" fixed="right">
-                <template slot="header" slot-scope="scope">
+                <template v-slot:header="scope">
                     <el-input v-model.trim="keySearch" size="mini" placeholder="输入卡类型代码进行搜索" />
                 </template>
-                <template slot-scope="scope">
+                <template v-slot="scope">
                     <el-button size="mini" type="warning" @click="modify(scope.row)">修改</el-button>
                     <el-button size="mini" type="danger" @click="del(scope.row)">删除</el-button>
                 </template>

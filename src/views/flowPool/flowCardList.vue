@@ -63,27 +63,27 @@
       <el-table-column align="center" width="150" label="阈值" prop="cardOffnetValue"></el-table-column>
       <el-table-column align="center" width="150" label="限速" prop="cardLimitSpeed"></el-table-column>
       <el-table-column align="center" width="150" label="状态" prop="cardStatus">
-        <template slot-scope="scope">
+        <template v-slot="scope">
           <el-tag effect="dark" type="danger" v-if="scope.row.cardStatus==1">停机</el-tag>
           <el-tag effect="dark" type="success" v-if="scope.row.cardStatus==0">正常</el-tag>
         </template>
       </el-table-column>
 
       <el-table-column align="center" width="300" label="创建日期" prop="addDate">
-        <template slot-scope="scope">{{scope.row.addDate | myTime | formatDateTime}}</template>
+        <template v-slot="scope">{{scope.row.addDate | myTime | formatDateTime}}</template>
       </el-table-column>
       <el-table-column align="center" width="300" label="更新日期" prop="updDate">
-        <template slot-scope="scope">{{scope.row.updDate | myTime | formatDateTime}}</template>
+        <template v-slot="scope">{{scope.row.updDate | myTime | formatDateTime}}</template>
       </el-table-column>
 
       <el-table-column align="center" width="300" label="激活日期" prop="actDate">
-        <template slot-scope="scope">{{scope.row.actDate | myTime | formatDateTime}}</template>
+        <template v-slot="scope">{{scope.row.actDate | myTime | formatDateTime}}</template>
       </el-table-column>
 
       
 
       <el-table-column width="200" align="right" fixed="right">
-        <template slot="header" slot-scope="scope">
+        <template v-slot:header="scope">
           <el-input v-model.trim="keySearch" size="mini" placeholder="输入卡号进行搜索" />
         </template>
  

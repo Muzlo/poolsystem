@@ -14,19 +14,19 @@
       <el-table-column align="center" fixed="left" width="150" label="流量池名称" prop="flowPoolName"></el-table-column>
       <el-table-column align="center" width="80" label="拥有者" prop="owner"></el-table-column>
       <el-table-column align="center" width="200" label="创建日期" prop="crtDate">
-        <template slot-scope="scope">{{scope.row.crtDate | myTime | formatDateTime}}</template>
+        <template v-slot="scope">{{scope.row.crtDate | myTime | formatDateTime}}</template>
       </el-table-column>
       <el-table-column align="center" width="200" label="激活日期" prop="firstDate">
-        <template slot-scope="scope">{{scope.row.firstDate | myTime | formatDateTime}}</template>
+        <template v-slot="scope">{{scope.row.firstDate | myTime | formatDateTime}}</template>
       </el-table-column>
       <el-table-column align="center" width="200" label="启用日期" prop="startDate">
-        <template slot-scope="scope">{{scope.row.startDate | myTime | formatDateTime}}</template>
+        <template v-slot="scope">{{scope.row.startDate | myTime | formatDateTime}}</template>
       </el-table-column>
       <el-table-column align="center" width="200" label="停用日期" prop="endDate">
-        <template slot-scope="scope">{{scope.row.endDate | myTime | formatDateTime}}</template>
+        <template v-slot="scope">{{scope.row.endDate | myTime | formatDateTime}}</template>
       </el-table-column>
       <el-table-column align="center" width="200" label="过期日期" prop="stopDate">
-        <template slot-scope="scope">
+        <template v-slot="scope">
           <span v-if="scope.row.stopDate==null"></span>
           <span v-else-if="scope.row.stopDate!=null">{{scope.row.stopDate | myTime | formatDateTime}}</span>
         </template>
@@ -34,7 +34,7 @@
       <el-table-column align="center" width="150" label="期限（月）" prop="limitDate"></el-table-column>
 
       <el-table-column align="center" width="200" label="流量池状态" prop="delFlag">
-        <template slot-scope="scope">
+        <template v-slot="scope">
           <el-tag effect="dark" v-if="scope.row.delFlag === 0">未启用</el-tag>
           <el-tag effect="dark" type="success" v-if="scope.row.delFlag === 1">启用</el-tag>
           <el-tag effect="dark" type="danger" v-else-if="scope.row.delFlag === 2">停用</el-tag>
@@ -47,23 +47,29 @@
       <el-table-column align="center" width="200" label="最大网卡数" prop="maxCard"></el-table-column>
       <el-table-column align="center" width="200" label="流量总量" prop="flowTotalData"></el-table-column>
       <el-table-column align="center" width="200" label="已用流量" prop="flowUsedData"></el-table-column>
-      <el-table-column align="center" width="200" label="剩余流量" prop="flowOverData"></el-table-column>
+
+      <el-table-column align="center" width="200" label="剩余流量">
+        <template v-slot="scope">
+            {{scope.row.flowTotalData-scope.row.flowUsedData}}
+        </template>
+      </el-table-column>
+
       <el-table-column align="center" width="200" label="流量最大值" prop="flowMaxData"></el-table-column>
       <el-table-column align="center" width="200" label="流量倍数" prop="flowRate"></el-table-column>
       <el-table-column align="center" width="200" label="最大网卡迁移数" prop="maxQty"></el-table-column>
 
       <el-table-column align="center" width="200" label="是否可迁移" prop="addFlag">
-        <template slot-scope="scope">
+        <template v-slot="scope">
           <el-tag effect="dark" type="success" v-if="scope.row.addFlag==true">是</el-tag>
           <el-tag effect="dark" type="danger" v-else-if="scope.row.addFlag==false">否</el-tag>
         </template>
       </el-table-column>
 
       <el-table-column min-width="200" align="right" fixed="right">
-        <template slot="header" slot-scope="scope">
+        <template v-slot:header="scope">
           <el-input v-model.trim="keySearch" size="mini" placeholder="输入流量池名称进行搜索" />
         </template>
-        <!-- <template slot-scope="scope">
+        <!-- <template v-slot="scope">
           <el-button size="mini" @click="start(scope.row.id)">启用</el-button>
           <el-button size="mini" type="danger" @click="stop(scope.row.id)">停用</el-button>
           <el-button size="mini" type="warning" @click="move(scope.row.id)">迁移</el-button>
