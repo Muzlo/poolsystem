@@ -1,5 +1,12 @@
 <template>
   <div class="wrap clearfix">
+
+    <el-row :gutter="20">
+      <el-col :span="4" :offset="20">
+        <el-button size="mini" class="fr" type="primary" @click="openDialog">申请流量池</el-button>
+      </el-col>
+    </el-row>
+
     <el-divider content-position="center">
       <h2>流量池列表</h2>
     </el-divider>
@@ -69,12 +76,11 @@
         <template v-slot:header="scope">
           <el-input v-model.trim="keySearch" size="mini" placeholder="输入流量池名称进行搜索" />
         </template>
-        <!-- <template v-slot="scope">
-          <el-button size="mini" @click="start(scope.row.id)">启用</el-button>
-          <el-button size="mini" type="danger" @click="stop(scope.row.id)">停用</el-button>
-          <el-button size="mini" type="warning" @click="move(scope.row.id)">迁移</el-button>
+        <template v-slot="scope">
+          <!-- <el-button size="mini" @click="start(scope.row)">启用</el-button>
+          <el-button size="mini" type="danger" @click="stop(scope.row)">停用</el-button> -->
           <el-button size="mini" type="success" @click="modify(scope.row)">修改</el-button>
-        </template> -->
+        </template>
       </el-table-column>
     </el-table>
 
@@ -87,68 +93,79 @@
       @handleCurrentChangeEmit="handleCurrentChange"
     />
 
-    <!-- 申请流量池 -->
+    <!-- 流量池弹窗 -->
+    <publicForm @resetFormEmit="resetForm" class="publicForm" :fullscreen="fullscreen" :width="width" :formTitle="formTitle" :formRules="formRules" :form="form" :otherInfo="otherInfo" :url="url">
 
-    <el-dialog title="申请流量池" :visible.sync="dialogVisible" width="450px">
-      <el-form
-        size="mini"
-        ref="flowPoolForm"
-        :rules="flowPoolFormRules"
-        :model="flowPoolForm"
-        label-width="120px"
-      >
-        <el-form-item label="选择客户" prop="flowPoolCustomerVal">
-          <el-select
-            class="w100"
-            filterable
-            v-model="flowPoolForm.flowPoolCustomerVal"
-            placeholder="请选择"
-          >
-            <el-option
-              v-for="item in flowPoolCustomer"
-              :key="item.value"
-              :label="item.name"
-              :value="item.value"
-            ></el-option>
-          </el-select>
-        </el-form-item>
+        <template slot="formContent">
+          <el-row>
+            <el-col :span="12">
+              <el-form-item label="最大卡数量" prop="cardCount">
+                  <el-input v-model.number="form.cardCount"></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
 
-        <el-form-item label="流量池名称" prop="flowPoolName">
-          <el-input v-model="flowPoolForm.flowPoolName"></el-input>
-        </el-form-item>
+            <el-form-item label="结束日期" prop="endDate">
+              <el-date-picker value-format="yyyy-MM-dd" v-model="form.endDate" type="date" placeholder="结束日期"></el-date-picker>
+            </el-form-item>
 
-        <el-form-item label="卡申请数量" prop="cardApplyNumber">
-          <el-input v-model="flowPoolForm.cardApplyNumber"></el-input>
-        </el-form-item>
+            </el-col>
+          </el-row>
 
-        <el-form-item label="卡迁移次数" prop="cardMigrationTimes">
-          <el-input v-model="flowPoolForm.cardMigrationTimes"></el-input>
-        </el-form-item>
+          <el-row>
+            <el-col :span="12">
+              <el-form-item label="流量池名称" prop="flowPoolName">
+                <el-input v-model="form.flowPoolName"></el-input>
+            </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="倍数" prop="flowRate">
+                <el-input v-model.number="form.flowRate"></el-input>
+            </el-form-item>
+            </el-col>
+          </el-row>
 
-        <el-form-item label="流量池容量(M)" prop="flowPoolCapacity">
-          <el-input v-model="flowPoolForm.flowPoolCapacity"></el-input>
-        </el-form-item>
 
-        <el-form-item label="流量池期限(月)" prop="flowPoolTerm">
-          <el-input v-model="flowPoolForm.flowPoolTerm"></el-input>
-        </el-form-item>
 
-        <el-form-item label="流量池叠加">
-          <el-radio v-model="flowPoolForm.flowPoolSuperposition" label="1">是</el-radio>
-          <el-radio v-model="flowPoolForm.flowPoolSuperposition" label="0">否</el-radio>
-        </el-form-item>
-      </el-form>
+         <el-row>
+            <el-col :span="12">
+              <el-form-item label="流量池大小(M)" prop="flowTotalData">
+                <el-input v-model.number="form.flowTotalData"></el-input>
+            </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="有效期限" prop="limitDate">
+                <el-input v-model="form.limitDate"></el-input>
+            </el-form-item>
+            </el-col>
+          </el-row>
 
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="flowpoolEdit('flowPoolForm')">确 定</el-button>
-      </span>
-    </el-dialog>
+          <el-row>
+            <el-col :span="12">
+              <el-form-item label="所有者客户代码" prop="owner">
+                <el-input v-model="form.owner"></el-input>
+            </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="启用日期" prop="startDate">
+                <el-date-picker value-format="yyyy-MM-dd" v-model="form.startDate" type="date" placeholder="启用日期"></el-date-picker>
+            </el-form-item>
+            </el-col>
+          </el-row>
+            
+        </template>
+
+    </publicForm>
+
+
+
+
   </div>
 </template>
 
 <script>
 import pagination from "../../components/flowpool/pagination.vue";
+import publicForm from "../../components/flowpool/publicForm.vue";
 import { baseURL } from "../../common/js/ipConfig.js";
 import { myTime, formatDateTime } from "../../common/js/formatDateTime";
 export default {
@@ -160,64 +177,62 @@ export default {
       currentPage: 1, //当前选中页
       pageSize: 30, //默认每页显示条数
       pageSizes: [30, 50, 100], //更改每页显示数据条数
-      dialogVisible: false, //弹窗显示隐藏
       windowHeight:"",//窗口高度
-      ///流量池修改
-      flowPoolForm: {
-        flowPoolName: "",
-        cardApplyNumber: "",
-        cardMigrationTimes: "",
-        flowPoolCapacity: "",
-        flowPoolTerm: "",
-        flowPoolSuperposition: "1",
-        flowPoolCustomerVal: ""
-      },
-      //验证表单
-      flowPoolFormRules: {
-        flowPoolName: [
-          { required: true, message: "不能为空", trigger: "blur" }
-        ],
-        cardApplyNumber: [
-          { required: true, message: "不能为空", trigger: "blur" }
-        ],
-        cardMigrationTimes: [
-          { required: true, message: "不能为空", trigger: "blur" }
-        ],
-        flowPoolCapacity: [
-          { required: true, message: "不能为空", trigger: "blur" }
-        ],
-        flowPoolTerm: [
-          { required: true, message: "不能为空", trigger: "blur" }
-        ],
-        flowPoolCustomerVal: [
-          { required: true, message: "不能为空", trigger: "blur" }
-        ]
-      },
-      ///流量池客户选择
-      flowPoolCustomer: [
-        {
-          value: "C0154",
-          name: "东莞市晟翔电子科技有限公司"
+      otherInfo:"-1",//0:新增时候显示的内容,1:同意,2:驳回
+      formTitle:"标题",
+      fullscreen:false,
+      width:"600px",
+      modifyIndex:-1,
+      ///表单
+        form: {
+            cardCount:0,
+            endDate:"",
+            flowPoolName:"",
+            flowRate:0,
+            flowTotalData:0,
+            limitDate:"",
+            owner:"",
+            startDate:""
         },
-        {
-          value: "C0214",
-          name: "深圳广联赛讯有限公司"
+        //验证表单
+        formRules: {
+            cardCount: [
+                { required: true, message: "不能为空", trigger: "blur" }
+            ],
+            endDate: [
+                { required: true, message: "不能为空", trigger: "blur" }
+            ],
+            flowPoolName: [
+                { required: true, message: "不能为空", trigger: "blur" }
+            ],
+            flowRate: [
+                { required: true, message: "不能为空", trigger: "blur" }
+            ],
+            flowTotalData: [
+                { required: true, message: "不能为空", trigger: "blur" }
+            ],
+            limitDate: [
+                { required: true, message: "不能为空", trigger: "blur" }
+            ],
+            owner: [
+                { required: true, message: "不能为空", trigger: "blur" }
+            ],
+            startDate: [
+                { required: true, message: "不能为空", trigger: "blur" }
+            ],
         },
-        {
-          value: "C0112",
-          name: "深圳互联波科技有限公司"
-        },
-        {
-          value: "C0159",
-          name: "深圳威仕特汽车电子有限公司"
+        //修改 新增接口地址
+        url:{
+            "addUrl":`${baseURL.ip1}/flowpool/addFlowPool`,
+            "updUrl":`${baseURL.ip1}/flowpool/updFlowPool`,
         }
-      ]
+
     };
   },
-  components: { pagination },
+  components: { pagination,publicForm },
   created() {},
   mounted() {
-    this.flowPoolList();
+    this.getTableListFn();
     this.windowHeight=document.documentElement.clientHeight;
     window.onresize=()=>{
       this.windowHeight=document.documentElement.clientHeight;
@@ -226,7 +241,7 @@ export default {
   computed: {
     //表格高度
     tableHeight() {
-      return this.windowHeight-250
+      return this.windowHeight-280
     },
     //复制一份表格数据
     tableList() {
@@ -238,11 +253,30 @@ export default {
       });
     }
   },
-  watch:{
-  },
   methods: {
+    //重置表单
+    resetForm(data){
+      this.form=data;
+    },
+    openDialog(){
+          this.$store.commit('dialogVisibleBaseInfo/dialogVisibleMutations',true);
+          this.formTitle='申请流量池';
+          this.otherInfo='0';
+          this.form={
+            cardCount:null,
+            endDate:"",
+            flowPoolName:"",
+            flowRate:null,
+            flowTotalData:null,
+            limitDate:"",
+            owner:"",
+            startDate:""
+          };
+
+
+      },
     //表格数据请求
-    async flowPoolList() {
+    async getTableListFn() {
       try {
         const data = await this.$axios.post(
           `${baseURL.ip1}/flowpool/flowPoolList`
@@ -264,13 +298,26 @@ export default {
       console.log(row);
     },
     //修改
-    modify(row) {
-      console.log(row);
+    modify(data) {
+      this.$store.commit('dialogVisibleBaseInfo/dialogVisibleMutations',true)
+      this.formTitle='修改流量池';
+      this.otherInfo='1';
+
+      this.form={
+        cardCount:data.cardCount,
+        endDate:data.endDate,
+        flowPoolName:data.flowPoolName,
+        flowRate:data.flowRate,
+        flowTotalData:data.flowTotalData,
+        limitDate:data.limitDate,
+        owner:data.owner,
+        startDate:data.startDate,
+        id:data.id
+      };
+
+
     },
-    //迁移
-    move(row) {
-      console.log(row);
-    },
+
     handleSizeChange(data) {
       this.pageSize = data;
       this.currentPage = 1;
@@ -283,5 +330,5 @@ export default {
 </script>
 
 <style scoped>
-
+  .publicForm .el-date-editor.el-input{width:100%;}
 </style>
