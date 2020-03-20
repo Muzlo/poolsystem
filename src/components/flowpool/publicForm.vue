@@ -10,7 +10,7 @@
         label-width="120px"
       >
         <slot name="formContent"></slot>
-{{form}}
+
       </el-form>
 
       <span slot="footer" class="dialog-footer">
@@ -74,21 +74,21 @@ export default {
       //表单提交
       formSubmit() {
           if(this.otherInfo=="1"){ //修改
-              this.publicHandle(this.url.updUrl);
+              this.publicHandle(this.url.updUrl,'post');
           }else if(this.otherInfo=="0"){ //新增
-              this.publicHandle(this.url.addUrl);
+              this.publicHandle(this.url.addUrl,'post');
           }
           // setTimeout(()=>{
           //   this.$parent.getTableListFn();
           // },500)
       },
       //新增 更新 删除 公共函数
-      async publicHandle(url){
+      async publicHandle(url,method){
           try {
-              const data = await this.$axios.post(url,
+              const data = await this.$axios[method](url,
               this._qs.stringify(this.form)
               );
-              console.log(data)
+              this.$emit("resultDataEmitFn",data.data);
               this.$message.success(data.message);
           } catch (err) {
               this.$message.error("服务器异常，请稍后再试！");

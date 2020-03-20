@@ -79,7 +79,7 @@
         <template v-slot="scope">
           <!-- <el-button size="mini" @click="start(scope.row)">启用</el-button>
           <el-button size="mini" type="danger" @click="stop(scope.row)">停用</el-button> -->
-          <el-button size="mini" type="success" @click="modify(scope.row)">修改</el-button>
+          <el-button size="mini" type="success" @click="modify(scope.row,scope.$index)">修改</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -94,63 +94,83 @@
     />
 
     <!-- 流量池弹窗 -->
-    <publicForm @resetFormEmit="resetForm" class="publicForm" :fullscreen="fullscreen" :width="width" :formTitle="formTitle" :formRules="formRules" :form="form" :otherInfo="otherInfo" :url="url">
+    <publicForm @resultDataEmitFn="resultDataFn" @resetFormEmit="resetForm" class="publicForm" :fullscreen="fullscreen" :width="width" :formTitle="formTitle" :formRules="formRules" :form="form" :otherInfo="otherInfo" :url="url">
 
         <template slot="formContent">
           <el-row>
-            <el-col :span="12">
+
+            <el-col :span="8">
+              <el-form-item label="流量池名称" prop="flowPoolName">
+                  <el-input v-model="form.flowPoolName"></el-input>
+              </el-form-item>
+            </el-col>
+
+            <el-col :span="8">
+              <el-form-item label="所有者客户代码" prop="owner">
+                <el-input v-model="form.owner" :disabled="ownerDisabled"></el-input>
+            </el-form-item>
+            </el-col>
+
+
+            <el-col :span="8">
               <el-form-item label="最大卡数量" prop="cardCount">
                   <el-input v-model.number="form.cardCount"></el-input>
               </el-form-item>
             </el-col>
-            <el-col :span="12">
 
-            <el-form-item label="结束日期" prop="endDate">
-              <el-date-picker value-format="yyyy-MM-dd" v-model="form.endDate" type="date" placeholder="结束日期"></el-date-picker>
-            </el-form-item>
 
-            </el-col>
+
+            
+
           </el-row>
 
           <el-row>
-            <el-col :span="12">
-              <el-form-item label="流量池名称" prop="flowPoolName">
-                <el-input v-model="form.flowPoolName"></el-input>
-            </el-form-item>
-            </el-col>
-            <el-col :span="12">
-              <el-form-item label="倍数" prop="flowRate">
-                <el-input v-model.number="form.flowRate"></el-input>
-            </el-form-item>
-            </el-col>
-          </el-row>
 
-
-
-         <el-row>
-            <el-col :span="12">
+            <el-col :span="8">
               <el-form-item label="流量池大小(M)" prop="flowTotalData">
                 <el-input v-model.number="form.flowTotalData"></el-input>
             </el-form-item>
             </el-col>
-            <el-col :span="12">
+            
+            <el-col :span="8">
+              <el-form-item label="倍数" prop="flowRate">
+                <el-input v-model.number="form.flowRate"></el-input>
+            </el-form-item>
+            </el-col>
+
+            
+            <el-col :span="8">
               <el-form-item label="有效期限" prop="limitDate">
                 <el-input v-model="form.limitDate"></el-input>
             </el-form-item>
             </el-col>
           </el-row>
 
+
+
           <el-row>
-            <el-col :span="12">
-              <el-form-item label="所有者客户代码" prop="owner">
-                <el-input v-model="form.owner"></el-input>
-            </el-form-item>
+            <el-col :span="8">
+              <el-form-item label="流量池状态" prop="delFlag">
+                <el-select v-model="form.delFlag" placeholder="请选择">
+                  <el-option v-for="item in delFlagSelect" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                </el-select>
+              </el-form-item>
             </el-col>
-            <el-col :span="12">
+            <el-col :span="8">
               <el-form-item label="启用日期" prop="startDate">
                 <el-date-picker value-format="yyyy-MM-dd" v-model="form.startDate" type="date" placeholder="启用日期"></el-date-picker>
             </el-form-item>
             </el-col>
+            <el-col :span="8">
+              <el-form-item label="结束日期" prop="endDate">
+                <el-date-picker value-format="yyyy-MM-dd" v-model="form.endDate" type="date" placeholder="结束日期"></el-date-picker>
+              </el-form-item>
+            </el-col>
+
+
+
+
+
           </el-row>
             
         </template>
@@ -181,58 +201,70 @@ export default {
       otherInfo:"-1",//0:新增时候显示的内容,1:同意,2:驳回
       formTitle:"标题",
       fullscreen:false,
-      width:"600px",
-      modifyIndex:-1,
+      width:"800px",
+      tableIndex:0,//获取该数据在表格的第几个位置（新增unshift、修改splice）
       ///表单
-        form: {
-            cardCount:0,
-            endDate:"",
-            flowPoolName:"",
-            flowRate:0,
-            flowTotalData:0,
-            limitDate:"",
-            owner:"",
-            startDate:""
-        },
-        //验证表单
-        formRules: {
-            cardCount: [
-                { required: true, message: "不能为空", trigger: "blur" }
-            ],
-            endDate: [
-                { required: true, message: "不能为空", trigger: "blur" }
-            ],
-            flowPoolName: [
-                { required: true, message: "不能为空", trigger: "blur" }
-            ],
-            flowRate: [
-                { required: true, message: "不能为空", trigger: "blur" }
-            ],
-            flowTotalData: [
-                { required: true, message: "不能为空", trigger: "blur" }
-            ],
-            limitDate: [
-                { required: true, message: "不能为空", trigger: "blur" }
-            ],
-            owner: [
-                { required: true, message: "不能为空", trigger: "blur" }
-            ],
-            startDate: [
-                { required: true, message: "不能为空", trigger: "blur" }
-            ],
-        },
-        //修改 新增接口地址
-        url:{
-            "addUrl":`${baseURL.ip1}/flowpool/addFlowPool`,
-            "updUrl":`${baseURL.ip1}/flowpool/updFlowPool`,
-        }
+      form: {
+          cardCount:null,
+          endDate:"",
+          flowPoolName:"",
+          flowRate:null,
+          flowTotalData:null,
+          limitDate:"",
+          owner:"",
+          startDate:"",
+          delFlag:null
+      },
+      ownerDisabled:false,//拥有者禁止修改
+      delFlagSelect:[
+        {label:"未启用",value:0},
+        {label:"启用",value:1},
+        {label:"停用",value:2},
+        {label:"已过期",value:3},
+        {label:"已迁移",value:4},
+      ],
+      //验证表单
+      formRules: {
+          cardCount: [
+              { required: true, message: "不能为空", trigger: "blur" }
+          ],
+          endDate: [
+              { required: true, message: "不能为空", trigger: "blur" }
+          ],
+          flowPoolName: [
+              { required: true, message: "不能为空", trigger: "blur" }
+          ],
+          flowRate: [
+              { required: true, message: "不能为空", trigger: "blur" }
+          ],
+          flowTotalData: [
+              { required: true, message: "不能为空", trigger: "blur" }
+          ],
+          limitDate: [
+              { required: true, message: "不能为空", trigger: "blur" }
+          ],
+          owner: [
+              { required: true, message: "不能为空", trigger: "blur" }
+          ],
+          startDate: [
+              { required: true, message: "不能为空", trigger: "blur" }
+          ],
+          delFlag: [
+              { required: true, message: "不能为空", trigger: "blur" }
+          ],
+      },
+      //修改 新增接口地址
+      url:{
+          "addUrl":`${baseURL.ip1}/flowpool/addFlowPool`,
+          "updUrl":`${baseURL.ip1}/flowpool/updFlowPool`,
+      }
 
     };
   },
   components: { pagination,publicForm },
   created() {},
   mounted() {
-    this.getTableListFn();
+    this.getTableListFn("post");
     this.windowHeight=document.documentElement.clientHeight;
     window.onresize=()=>{
       this.windowHeight=document.documentElement.clientHeight;
@@ -254,6 +286,18 @@ export default {
     }
   },
   methods: {
+    //获取返回的某条数据（新增、修改）
+    resultDataFn(res){
+      switch(this.otherInfo){
+        case "0":
+          this.tableData.splice(this.tableIndex,0,res)
+          break;
+        case "1":
+          this.tableData.splice(this.tableIndex,1,res)
+          break;
+      }
+      
+    },
     //重置表单
     resetForm(data){
       this.form=data;
@@ -262,6 +306,7 @@ export default {
           this.$store.commit('dialogVisibleBaseInfo/dialogVisibleMutations',true);
           this.formTitle='申请流量池';
           this.otherInfo='0';
+          this.ownerDisabled=false;
           this.form={
             cardCount:null,
             endDate:"",
@@ -270,15 +315,16 @@ export default {
             flowTotalData:null,
             limitDate:"",
             owner:"",
-            startDate:""
+            startDate:"",
+            delFlag:null
           };
 
 
       },
     //表格数据请求
-    async getTableListFn() {
+    async getTableListFn(methods) {
       try {
-        const data = await this.$axios.post(
+        const data = await this.$axios[methods](
           `${baseURL.ip1}/flowpool/flowPoolList`
         );
         if (data.success) {
@@ -298,11 +344,12 @@ export default {
       console.log(row);
     },
     //修改
-    modify(data) {
+    modify(data,index) {
       this.$store.commit('dialogVisibleBaseInfo/dialogVisibleMutations',true)
       this.formTitle='修改流量池';
       this.otherInfo='1';
-
+      this.ownerDisabled=true;
+      this.tableIndex=index;
       this.form={
         cardCount:data.cardCount,
         endDate:data.endDate,
@@ -312,7 +359,8 @@ export default {
         limitDate:data.limitDate,
         owner:data.owner,
         startDate:data.startDate,
-        id:data.id
+        id:data.id,
+        delFlag:data.delFlag
       };
 
 

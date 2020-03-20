@@ -1,15 +1,14 @@
 <template>
   <div>
-    <el-form size="small" :inline="true" :model="formInline">
+    <el-form size="small" :inline="true">
 
-        <!-- <el-form-item label="选择流量池">
-            <el-select v-model="formInline.region" placeholder="请选择">
-            <el-option label="区域一" value="shanghai"></el-option>
-            <el-option label="区域二" value="beijing"></el-option>
+        <el-form-item label="选择流量池">
+            <el-select v-model="flowPoolId" placeholder="请选择">
+             <el-option v-for="item of flowPoolSelect" :key="item.id" :label="item.flowPoolName" :value="item.id"></el-option>
             </el-select>
-        </el-form-item> -->
+        </el-form-item>
 
-        <el-form-item class="fr">
+        <el-form-item>
             <el-upload
             ref="upload"
             action="#"
@@ -67,8 +66,8 @@ export default {
     name:"flowPoolCardImport",
     data() {
       return {
-        formInline: {
-        },
+        flowPoolId:null,
+        flowPoolSelect: [],
         fileList:[],
         tableData: [],
         keySearch: "", //关键字搜索
@@ -83,28 +82,31 @@ export default {
             var testmsg=file.name.substring(file.name.lastIndexOf('.')+1)                
             const extension = testmsg === 'xls'
             const extension2 = testmsg === 'xlsx'
-            const isLt2M = file.size / 1024 / 1024 < 1000
+            //const isLt2M = file.size / 1024 / 1024 < 1000;
             if(!extension && !extension2) {
                 this.$message({
                     message: '上传文件只能是 xls、xlsx格式!',
                     type: 'warning'
                 });
             }
-            if(!isLt2M) {
-                this.$message({
-                    message: '上传文件大小不能超过 1000MB!',
-                    type: 'warning'
-                });
-            }
-            if(extension || extension2 && isLt2M){
-                this.fileName=file.name
-            }
-            return extension || extension2 && isLt2M
+            // if(!isLt2M) {
+            //     this.$message({
+            //         message: '上传文件大小不能超过 1000MB!',
+            //         type: 'warning'
+            //     });
+            // }
+            // if(extension || extension2 && isLt2M){
+            //     this.fileName=file.name
+            // }
+            // return extension || extension2 && isLt2M
+            return extension || extension2
         },
         httpRequest(param) {
+          if(this.flowPoolId){
             let fileObj = param.file // 相当于input里取得的files
             let fd = new window.FormData()// FormData 对象
             fd.append('files', fileObj)// 文件对象
+            fd.append('flowPoolId', this.flowPoolId)// 文件对象
             let url = `${baseURL.ip1}/flowpool/uploadFlowPoolCard`;
             var options = {
                 url: url,
@@ -119,10 +121,33 @@ export default {
             }).catch((err)=>{
               this.$message.error('上传失败！');
             })
-        }
+          }else{
+            this.$message({
+                message: '请选择流量池！',
+                type: 'warning'
+            });
+          }
+            
+        },
+        async getFlowPoolSelectFn(methods) {
+          try {
+            const data = await this.$axios[methods](
+              `${baseURL.ip1}/flowpool/flowPoolList`
+            );
+            if (data.success) {
+              this.flowPoolSelect=data.data;
+            }
+          } catch (err) {
+            console.log(err);
+            this.$message.error("服务器异常，请稍后再试！");
+          }
+        },
     },
     created(){},
     computed:{},
+    mounted(){
+      this.getFlowPoolSelectFn("post");
+    },
 
 
   }
