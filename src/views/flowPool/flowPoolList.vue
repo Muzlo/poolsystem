@@ -57,7 +57,7 @@
 
       <el-table-column align="center" width="200" label="剩余流量">
         <template v-slot="scope">
-            {{scope.row.flowTotalData-scope.row.flowUsedData}}
+            {{(scope.row.flowTotalData-scope.row.flowUsedData) |toFixed}}
         </template>
       </el-table-column>
 
@@ -263,6 +263,11 @@ export default {
   },
   components: { pagination,publicForm },
   created() {},
+  filters:{
+    toFixed(data){
+      return data.toFixed(2)
+    }
+  },
   mounted() {
     this.getTableListFn("post");
     this.windowHeight=document.documentElement.clientHeight;

@@ -27,10 +27,10 @@ router.beforeEach(async (to, from, next) => {
                         {
                             text: '流量池管理',
                             children: [
-                                {
-                                    name: 'flowPoolApply',
-                                    text: '流量池申请',
-                                },
+                                // {
+                                //     name: 'flowPoolApply',
+                                //     text: '流量池申请',
+                                // },
                                 {
                                     name: 'flowPoolList',
                                     text: '流量池列表',
