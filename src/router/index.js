@@ -42,18 +42,18 @@ export const asyncRoutes = {
         meta: { title: '流量池列表' },
         component: () => import('../views/flowPool/flowPoolList.vue'),
     },
-    flowPoolApply: {
-        path: 'flowPoolApply',
-        name: 'flowPoolApply',
-        meta: { title: '流量池申请' },
-        component: () => import('../views/flowPool/flowPoolApply.vue'),
-    },
+    // flowPoolApply: {
+    //     path: 'flowPoolApply',
+    //     name: 'flowPoolApply',
+    //     meta: { title: '流量池申请' },
+    //     component: () => import('../views/flowPool/flowPoolApply.vue'),
+    // },
     flowPoolCardImport: {
         path: 'flowPoolCardImport',
         name: 'flowPoolCardImport',
         meta: { title: '流量池网卡导入' },
         component: () => import('../views/flowPool/flowPoolCardImport.vue'),
-    },
+    }, 
     flowCardList: {
         path: 'flowCardList',
         name: 'flowCardList',
