@@ -1,7 +1,7 @@
 <template>
 
 
-    <el-dialog @close="closeFn" :fullscreen="fullscreen" :title="formTitle" :visible.sync="dialogVisibleFn" :width="width">
+    <el-dialog @close="closeFn" :close-on-click-modal='closeOnClickModal' :fullscreen="fullscreen" :title="formTitle" :visible.sync="dialogVisibleFn" :width="width">
       <el-form
         size="mini"
         ref="apiUserForm"
@@ -33,7 +33,8 @@ export default {
     otherInfo:{},
     url:{},
     fullscreen:{},
-    width:{}
+    width:{},
+    closeOnClickModal:{}
   },
   data(){
     return {

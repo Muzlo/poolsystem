@@ -58,7 +58,7 @@
 
     <!-- 接口用户表单 -->
 
-    <el-dialog :title="formTitle" :visible.sync="dialogVisible" width="450px">
+    <el-dialog :close-on-click-modal='closeOnClickModal' :title="formTitle" :visible.sync="dialogVisible" width="450px">
       <el-form
         size="mini"
         ref="apiUserForm"
@@ -76,9 +76,15 @@
           <el-input v-model="apiUserForm.customer"></el-input>
         </el-form-item>
 
+        <el-form-item label="是否启用">
+          <el-switch v-model="enable"></el-switch>
+        </el-form-item>
+
         <el-form-item label="ip" prop="ip">
           <el-input v-model="apiUserForm.ip"></el-input>
         </el-form-item>
+  
+        
 
         <el-form-item label="备注" prop="remark">
           <el-input v-model="apiUserForm.remark"></el-input>
@@ -121,6 +127,7 @@ export default {
             windowHeight:"",//窗口高度
             otherInfo:"-1",//0:新增时候显示的内容,1:修改时候显示的内容,2:删除时候显示的内容
             formTitle:"",
+            closeOnClickModal:false,
             ///流量池修改
             apiUserForm: {
                 userName: "",
@@ -128,6 +135,7 @@ export default {
                 ip:"",
                 remark:""
             },
+            enable:true,
             //验证表单
             apiUserFormRules: {
                 userName: [
@@ -188,9 +196,13 @@ export default {
         },
         //新增 修改 删除
         async publicHandle(url){
+            let paramsObj={
+              ...this.apiUserForm,
+              status:this.enable
+            }
             try {
                 const data = await this.$axios.post(url,
-                this._qs.stringify(this.apiUserForm)
+                this._qs.stringify(paramsObj)
                 );
                 this.$message.success(data.message);
                 this.apiUserList();
@@ -239,6 +251,7 @@ export default {
             this.apiUserForm.remark=data.remark;
             this.apiUserForm.appSecret=data.appSecret;
             this.apiUserForm.id=data.id;
+            this.enable=data.status;
         },
         //删除接口用户
         del(data,index){

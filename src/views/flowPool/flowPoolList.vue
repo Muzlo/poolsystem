@@ -94,7 +94,7 @@
     />
 
     <!-- 流量池弹窗 -->
-    <publicForm @resultDataEmitFn="resultDataFn" @resetFormEmit="resetForm" class="publicForm" :fullscreen="fullscreen" :width="width" :formTitle="formTitle" :formRules="formRules" :form="form" :otherInfo="otherInfo" :url="url">
+    <publicForm :closeOnClickModal="closeOnClickModal" @resultDataEmitFn="resultDataFn" @resetFormEmit="resetForm" class="publicForm" :fullscreen="fullscreen" :width="width" :formTitle="formTitle" :formRules="formRules" :form="form" :otherInfo="otherInfo" :url="url">
 
         <template slot="formContent">
           <el-row>
@@ -201,7 +201,8 @@ export default {
       otherInfo:"-1",//0:新增时候显示的内容,1:同意,2:驳回
       formTitle:"标题",
       fullscreen:false,
-      width:"800px",
+      width:"900px",
+      closeOnClickModal:false,
       tableIndex:0,//获取该数据在表格的第几个位置（新增unshift、修改splice）
       ///表单
       form: {

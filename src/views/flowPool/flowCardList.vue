@@ -197,7 +197,7 @@ export default {
       var pageSize={size:this.pageSize};
       var splitJson={};
       splitJson[this.numberType]=this.cardNumber;
-      var cardCustomer={cardCustomer:"C4169"}
+      var cardCustomer={cardCustomer:this.flowPoolForm.cardCustomer}
       obj={...this.flowPoolForm,...currentPage,...pageSize,...splitJson,...cardCustomer};
 
       try {
