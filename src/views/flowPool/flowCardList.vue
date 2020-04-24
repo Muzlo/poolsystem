@@ -19,6 +19,7 @@
             <el-select v-model="flowPoolForm.cardStatus" placeholder="请选择">
               <el-option label="正常" value="0"></el-option>
               <el-option label="停机" value="1"></el-option>
+              <el-option label="销户" value="9"></el-option>
             </el-select>
         </el-form-item>
 
@@ -66,6 +67,7 @@
         <template v-slot="scope">
           <el-tag effect="dark" type="danger" v-if="scope.row.cardStatus==1">停机</el-tag>
           <el-tag effect="dark" type="success" v-if="scope.row.cardStatus==0">正常</el-tag>
+          <el-tag effect="dark" type="info" v-if="scope.row.cardStatus==9">销户</el-tag>
         </template>
       </el-table-column>
 
